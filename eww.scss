@@ -1,0 +1,96 @@
+@import "themes/nebula";
+
+// REGLA MAESTRA PARA DEBIAN: Forzar canal Alfa
+window {
+  background-color: transparent;
+  all: unset;
+}
+
+// Reset global
+* {
+  all: unset;
+  background-color: transparent;
+  font-family: "MesloLGM Nerd Font Mono", "Symbols Nerd Font Mono", "CaskaydiaCove Nerd Font Propo";
+  font-size: 10px; 
+  font-weight: bold;
+}
+
+// La barra visual (la "isla" flotante)
+.bar-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 12px; 
+  margin: 0px; 
+  padding: 0px 6px;
+  min-height: 25px;
+}
+
+// Estilo base para cada módulo
+.module {
+  background-color: rgba($bg-alt, 0.7); 
+  padding: 0px 6px; 
+  margin: 2px 4px; 
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.module:hover {
+  background-color: rgba($fg, 0.15);
+}
+
+// Workspaces
+.workspaces-button {
+  padding: 0px 4px;
+  margin: 0px 2px;
+  min-width: 8px;
+  background-color: rgba($bg-alt, 0.3);
+  border-radius: 4px;
+  color: $fg;
+}
+
+.workspaces-button.active {
+  background-color: rgba($fg, 0.2);
+  color: $purple;
+}
+
+.ws-icon {
+  font-family: "Symbols Nerd Font", "Symbols Nerd Font Mono";
+  font-size: 10px;
+}
+
+// Colores de módulos específicos
+.clock { font-weight: bold; }
+.network { color: $blue; }
+.network.disconnected { color: $fg; }
+.audio { color: $purple; }
+.backlight { color: $yellow; }
+.battery { color: $green; }
+.bluetooth { color: $blue; }
+
+// Menú de energía
+.power-icon { color: $red; font-size: 11px; }
+.lock-icon { color: $cyan; font-size: 11px; }
+.suspend-icon { color: $yellow; font-size: 11px; }
+.reboot-icon { color: $green; font-size: 11px; }
+
+.power-icon, .lock-icon, .suspend-icon, .reboot-icon {
+  padding: 0 2px;
+}
+
+// Calendario
+.calendar-container {
+  background-color: $bg;
+  color: $fg;
+  border-radius: 12px;
+  padding: 10px;
+  border: 1px solid rgba($blue, 0.15);
+}
+
+calendar {
+  background-color: transparent;
+  color: $fg;
+}
+
+calendar:selected {
+  color: $purple;
+  text-decoration: underline;
+}
