@@ -12,4 +12,4 @@ NEW_INFO=$(/home/jose/.config/eww/scripts/audio.sh)
 
 # 3. Forzar actualización inmediata en Eww
 # Usamos el path absoluto para evitar problemas de entorno
-/home/jose/.cargo/bin/eww update audio_info="$NEW_INFO"
+/home/jose/eww/target/release/eww update audio_info="$NEW_INFO"

@@ -83,7 +83,7 @@
           (label :text {ws.status == "active" ? "󰮯" : ""} :class "ws-icon"))))))
 
 (defwidget clock_module []
-  (eventbox :onclick "eww open --toggle calendar_win" :cursor "pointer"
+  (eventbox :onclick "/home/jose/eww/target/release/eww open --toggle calendar_win" :cursor "pointer"
     (box :class "module clock"
       time)))
 
@@ -97,7 +97,7 @@
 
 (defwidget updates []
   (box :visible {updates_json.text != ""}
-    (eventbox :cursor "pointer" :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y; pkill -SIGRTMIN+8 waybar; echo \"Sistema actualizado. Presiona cualquier tecla para cerrar...\"; read -n 1' &"
+    (eventbox :cursor "pointer" :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y; echo \"Sistema actualizado. Presiona cualquier tecla para cerrar...\"; read -n 1' &"
       (box :class "module updates" {updates_json.text}))))
 
 (defwidget quicksettings []
@@ -120,13 +120,13 @@
          " ${battery_capacity}%")
 
     (eventbox :cursor "pointer"
-              :onscroll "if [ {} = up ]; then brightnessctl set 5%+; else brightnessctl set 5%-; fi && eww update backlight_info=\"$(/home/jose/.config/eww/scripts/backlight.sh)\""
+              :onscroll "if [ {} = up ]; then brightnessctl set 5%+; else brightnessctl set 5%-; fi && /home/jose/eww/target/release/eww update backlight_info=\"$(/home/jose/.config/eww/scripts/backlight.sh)\""
       (box :class "module backlight" backlight_info))
     ))
 
 (defwidget power_menu []
-  (eventbox :onhover "eww update power_reveal=true" 
-            :onhoverlost "eww update power_reveal=false"
+  (eventbox :onhover "/home/jose/eww/target/release/eww update power_reveal=true" 
+            :onhoverlost "/home/jose/eww/target/release/eww update power_reveal=false"
     (box :orientation "h" :space-evenly false :class "module"
       (eventbox :cursor "pointer" :onclick "~/.config/hypr/confirm_power.sh '¿Apagar?' 'shutdown now'" 
         (label :text "⏻" :class "power-icon"))
@@ -134,7 +134,7 @@
                 :reveal power_reveal
                 :duration "500ms"
         (box :spacing 15 :style "margin-left: 10px; margin-right: 5px;"
-          (eventbox :cursor "pointer" :onclick "hyprlock &" 
+          (eventbox :cursor "pointer" :onclick "hyprlock & sleep 2 && hyprctl dispatch dpms off"
             (label :text "󰌾" :class "lock-icon"))
           (eventbox :cursor "pointer" :onclick "~/.config/hypr/confirm_power.sh '¿Suspender?' 'systemctl suspend'" 
             (label :text "󰤄" :class "suspend-icon"))
