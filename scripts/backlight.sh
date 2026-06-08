@@ -4,11 +4,11 @@
 brightness=$(brightnessctl -m | cut -d, -f4 | tr -d '%')
 
 if [ "$brightness" -lt 25 ]; then
-    echo "󰃞 $brightness%"
+    echo "󰃞"
 elif [ "$brightness" -lt 50 ]; then
-    echo "󰃝 $brightness%"
+    echo "󰃝"
 elif [ "$brightness" -lt 75 ]; then
-    echo "󰃟 $brightness%"
+    echo "󰃟"
 else
-    echo "󰃠 $brightness%"
+    echo "󰃠"
 fi

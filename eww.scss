@@ -11,13 +11,13 @@ window {
   all: unset;
   background-color: transparent;
   font-family: "MesloLGM Nerd Font Mono", "Symbols Nerd Font Mono", "CaskaydiaCove Nerd Font Propo";
-  font-size: 10px; 
+  font-size: 11px; 
   font-weight: bold;
 }
 
 // La barra visual (la "isla" flotante)
 .bar-container {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 12px; 
   margin: 0px; 
   padding: 0px 6px;
