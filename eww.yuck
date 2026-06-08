@@ -43,21 +43,26 @@
 (defpoll time :interval "1s"
   "date '+ %H:%M   %d/%m'")
 
+(defpoll full_date :interval "1h"
+  "date '+%A, %d de %B de %Y'")
+
 (defpoll music_info :interval "2s"
   "/home/jose/.config/eww/scripts/music.sh")
 
 (defpoll network_json :interval "3s"
   :initial '{"text": "󰤭", "tooltip": "Conectando...", "class": "disconnected"}'
-  "~/.config/hypr/waybar_network.sh")
+  "/home/jose/.config/hypr/waybar_network.sh")
 
-(defvar audio_info "")
-(defpoll audio_poll :interval "2s"
+(defpoll audio_json :interval "2s"
+  :initial '{"text": "󰝟 0%", "tooltip": "Cargando..."}'
   "/home/jose/.config/eww/scripts/audio.sh")
 
-(defpoll backlight_info :interval "2s"
+(defpoll backlight_json :interval "2s"
+  :initial '{"text": "󰃠", "tooltip": "Brillo"}'
   "/home/jose/.config/eww/scripts/backlight.sh")
 
-(defpoll bluetooth_info :interval "5s"
+(defpoll bluetooth_json :interval "5s"
+  :initial '{"text": "󰂲", "tooltip": "Bluetooth"}'
   "/home/jose/.config/eww/scripts/bluetooth.sh")
 
 (defpoll battery_capacity :interval "30s"
@@ -68,7 +73,7 @@
 
 (defpoll updates_json :interval "3600s"
   :initial '{"text": "", "class": "updated"}'
-  "~/.config/hypr/check_updates.sh")
+  "/home/jose/.config/hypr/check_updates.sh")
 
 (defvar power_reveal false)
 
@@ -79,11 +84,14 @@
     (for ws in workspaces_json
       (eventbox :cursor "pointer"
                 :onclick "hyprctl dispatch workspace ${ws.id}"
+                :tooltip "Workspace ${ws.id}"
         (box :class "workspaces-button ${ws.status}"
           (label :text {ws.status == "active" ? "󰮯" : ""} :class "ws-icon"))))))
 
 (defwidget clock_module []
-  (eventbox :onclick "/home/jose/eww/target/release/eww open --toggle calendar_win" :cursor "pointer"
+  (eventbox :onclick "/home/jose/eww/target/release/eww open --toggle calendar_win" 
+            :cursor "pointer"
+            :tooltip full_date
     (box :class "module clock"
       time)))
 
@@ -97,47 +105,61 @@
 
 (defwidget updates []
   (box :visible {updates_json.text != ""}
-    (eventbox :cursor "pointer" :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y; echo \"Sistema actualizado. Presiona cualquier tecla para cerrar...\"; read -n 1' &"
+    (eventbox :cursor "pointer" 
+              :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y; echo \"Sistema actualizado. Presiona cualquier tecla para cerrar...\"; read -n 1' &"
+              :tooltip "Actualizaciones pendientes"
       (box :class "module updates" {updates_json.text}))))
 
 (defwidget quicksettings []
   (box :orientation "h" :space-evenly false
     (eventbox :cursor "pointer" 
-              :onscroll "/home/jose/.config/eww/scripts/volume.sh {}"
+              :onscroll "~/.config/eww/scripts/volume.sh {}"
               :onclick "XDG_CURRENT_DESKTOP=GNOME gnome-control-center sound &"
-      (box :class "module audio" {audio_info == "" ? audio_poll : audio_info}))
+              :tooltip {audio_json.tooltip}
+      (box :class "module audio" {audio_json.text}))
 
     (eventbox :cursor "pointer" :onclick "foot nmtui &"
+              :tooltip {network_json.tooltip}
       (box :class "module network ${network_json.class}" 
-           :tooltip {network_json.tooltip}
            {network_json.text}))
 
     (eventbox :cursor "pointer" :onclick "blueman-manager &"
-      (box :class "module bluetooth" bluetooth_info))
+              :tooltip {bluetooth_json.tooltip}
+      (box :class "module bluetooth" {bluetooth_json.text}))
 
     (box :class "module battery" 
+         :tooltip "Estado: ${battery_status} - ${battery_capacity}%"
          {battery_status == "Charging" ? "󱐋" : ""}
          " ${battery_capacity}%")
 
     (eventbox :cursor "pointer"
-              :onscroll "if [ {} = up ]; then brightnessctl set 5%+; else brightnessctl set 5%-; fi && /home/jose/eww/target/release/eww update backlight_info=\"$(/home/jose/.config/eww/scripts/backlight.sh)\""
-      (box :class "module backlight" backlight_info))
+              :onscroll "if [ {} = up ]; then brightnessctl set 5%+; else brightnessctl set 5%-; fi && /home/jose/eww/target/release/eww update backlight_json=\"$(/home/jose/.config/eww/scripts/backlight.sh)\""
+              :tooltip {backlight_json.tooltip}
+      (box :class "module backlight" {backlight_json.text}))
     ))
 
 (defwidget power_menu []
   (eventbox :onhover "/home/jose/eww/target/release/eww update power_reveal=true" 
             :onhoverlost "/home/jose/eww/target/release/eww update power_reveal=false"
     (box :orientation "h" :space-evenly false :class "module"
-      (eventbox :cursor "pointer" :onclick "~/.config/hypr/confirm_power.sh '¿Apagar?' 'shutdown now'" 
+      (eventbox :cursor "pointer" 
+                :onclick "/home/jose/.config/hypr/confirm_power.sh '¿Apagar?' 'shutdown now'" 
+                :tooltip "Apagar"
         (label :text "⏻" :class "power-icon"))
       (revealer :transition "slideright"
                 :reveal power_reveal
                 :duration "500ms"
         (box :spacing 15 :style "margin-left: 10px; margin-right: 5px;"
-          (eventbox :cursor "pointer" :onclick "hyprlock & sleep 2 && hyprctl dispatch dpms off"
+          (eventbox :cursor "pointer" 
+                    :onclick "hyprlock & sleep 2 && hyprctl dispatch dpms off"
+                    :tooltip "Bloquear"
             (label :text "󰌾" :class "lock-icon"))
-          (eventbox :cursor "pointer" :onclick "~/.config/hypr/confirm_power.sh '¿Suspender?' 'systemctl suspend'" 
+          (eventbox :cursor "pointer" 
+                    :onclick "/home/jose/.config/hypr/confirm_power.sh '¿Suspender?' 'systemctl suspend'" 
+                    :tooltip "Suspender"
             (label :text "󰤄" :class "suspend-icon"))
-          (eventbox :cursor "pointer" :onclick "~/.config/hypr/confirm_power.sh '¿Reiniciar?' 'reboot'" 
+          (eventbox :cursor "pointer" 
+                    :onclick "/home/jose/.config/hypr/confirm_power.sh '¿Reiniciar?' 'reboot'" 
+                    :tooltip "Reiniciar"
             (label :text "󰜉" :class "reboot-icon"))
           )))))

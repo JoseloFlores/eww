@@ -3,12 +3,17 @@
 # Generar icono de bluetooth
 if bluetoothctl show | grep -q "Powered: yes"; then
     # Check connected devices
-    connected=$(bluetoothctl devices Connected)
+    connected=$(bluetoothctl devices Connected | cut -d ' ' -f 3-)
     if [ -n "$connected" ]; then
-        echo "󰂱 Connected"
+        ICON="󰂱"
+        TOOLTIP="Conectado: $connected"
     else
-        echo "󰂯"
+        ICON="󰂯"
+        TOOLTIP="Encendido (Desconectado)"
     fi
 else
-    echo "󰂲"
+    ICON="󰂲"
+    TOOLTIP="Apagado"
 fi
+
+echo "{\"text\": \"$ICON\", \"tooltip\": \"$TOOLTIP\"}"

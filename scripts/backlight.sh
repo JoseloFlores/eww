@@ -4,11 +4,13 @@
 brightness=$(brightnessctl -m | cut -d, -f4 | tr -d '%')
 
 if [ "$brightness" -lt 25 ]; then
-    echo "󰃞"
+    ICON="󰃞"
 elif [ "$brightness" -lt 50 ]; then
-    echo "󰃝"
+    ICON="󰃝"
 elif [ "$brightness" -lt 75 ]; then
-    echo "󰃟"
+    ICON="󰃟"
 else
-    echo "󰃠"
+    ICON="󰃠"
 fi
+
+echo "{\"text\": \"$ICON\", \"tooltip\": \"Brillo: $brightness%\"}"
