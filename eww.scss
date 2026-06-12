@@ -90,7 +90,14 @@ calendar {
   color: $fg;
 }
 
-calendar:selected {
-  color: $purple;
-  text-decoration: underline;
+// Tooltips
+tooltip {
+  background-color: $bg-alt;
+  border-radius: 8px;
+  border: 1px solid rgba($blue, 0.3);
+}
+
+tooltip label {
+  padding: 4px 8px;
+  color: $fg;
 }

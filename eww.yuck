@@ -71,7 +71,7 @@
 (defpoll battery_status :interval "30s"
   "cat /sys/class/power_supply/BAT0/status")
 
-(defpoll updates_json :interval "3600s"
+(defpoll updates_json :interval "1600s"
   :initial '{"text": "", "class": "updated"}'
   "/home/jose/.config/hypr/check_updates.sh")
 
@@ -114,7 +114,7 @@
   (box :orientation "h" :space-evenly false
     (eventbox :cursor "pointer" 
               :onscroll "~/.config/eww/scripts/volume.sh {}"
-              :onclick "XDG_CURRENT_DESKTOP=GNOME gnome-control-center sound &"
+              :onclick "pavucontrol &"
               :tooltip {audio_json.tooltip}
       (box :class "module audio" {audio_json.text}))
 
