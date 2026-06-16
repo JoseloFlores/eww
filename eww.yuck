@@ -1,18 +1,18 @@
 ;; --- VARIABLES ---
-(defpoll cpu_usage :interval "1s" "/home/jose/.config/eww/scripts/cpu_fast.sh")
+(defpoll cpu_usage :interval "1s" "scripts/cpu_fast.sh")
 (defpoll ram_usage :interval "2s" "free -m | awk '/Mem:/ { print int($3/$2 * 100) }'")
-(defpoll disk_usage :interval "10m" "/home/jose/.config/eww/scripts/disk.sh")
+(defpoll disk_usage :interval "10m" "scripts/disk.sh")
 (defpoll temp_cpu :interval "2s" "cat /sys/class/thermal/thermal_zone7/temp | cut -c1-2")
 
-(defpoll weather_json :interval "30m" "/home/jose/.config/eww/scripts/weather.sh")
-(defpoll net_info :interval "10s" "/home/jose/.config/eww/scripts/network_info.sh")
+(defpoll weather_json :interval "30m" "scripts/weather.sh")
+(defpoll net_info :interval "10s" "scripts/network_info.sh")
 
 (defpoll time_hour :interval "1m" "date '+%H'")
 (defpoll time_min :interval "1m" "date '+%M'")
 (defpoll day_name :interval "1h" "date '+%A' | tr '[:lower:]' '[:upper:]'")
 (defpoll day_date :interval "1h" "date '+%d / %b / %Y' | tr '[:lower:]' '[:upper:]'")
 
-(defpoll net_speed :interval "1s" "/home/jose/.config/eww/scripts/network_fast.sh")
+(defpoll net_speed :interval "1s" "scripts/network_fast.sh")
 
 (defvar power_reveal false)
 
@@ -21,7 +21,7 @@
   :monitor 0
   :stacking "bg"
   :focusable false
-  :geometry (geometry :x "10px" :y "100px" :width "450px" :anchor "top right")
+  :geometry (geometry :x "9px" :y "100px" :width "450px" :anchor "top right")
   (box :class "conky-main-container" :orientation "h" :space-evenly false :spacing 30
     
     ;; COLUMNA IZQUIERDA
@@ -51,14 +51,14 @@
       ;; Panel 2: Clima
       (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 5
         (label :text {weather_json.location} :class "conky-loc-text" :halign "start")
-        (box :orientation "h" :space-evenly false :spacing 15
+        (box :orientation "v" :space-evenly false :spacing 15
           (label :text {weather_json.temp} :class "conky-temp-text")
           (box :orientation "v" :space-evenly false :valign "center"
             (label :text "${weather_json.icon} ${weather_json.condition}" :class "conky-cond-text" :halign "start")
             (label :text "Hum: ${weather_json.humid}" :class "conky-vis-text" :halign "start"))))
 
       ;; Panel 3: Red
-      (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 8
+      (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 9
         (label :text "Wi-Fi : ${net_info.ssid}" :class "conky-wifi-ssid" :halign "start")
         (box :orientation "v" :space-evenly false :spacing 5
           (box :orientation "v" :space-evenly false :spacing 2
@@ -78,7 +78,7 @@
   :exclusive true
   :focusable false
   :namespace "eww-bar"
-  :geometry (geometry :x "0px" :y "0px" :width "100%" :height "25px" :anchor "top center")
+  :geometry (geometry :x "0px" :y "0px" :width "100%" :height "20px" :anchor "top center")
   (bar_layout))
 
 (defwidget bar_layout []
@@ -102,7 +102,7 @@
     (quicksettings)
     (power_menu)))
 
-(deflisten workspaces_json :initial "[]" "/home/jose/.config/eww/scripts/workspaces.sh")
+(deflisten workspaces_json :initial "[]" "scripts/workspaces.sh")
 
 (defpoll time :interval "1s" "date '+ %H:%M   %d/%m'")
 (defpoll full_date :interval "1h" "date '+%A, %d de %B de %Y'")
@@ -113,18 +113,18 @@
 
 (defpoll audio_json :interval "0.5s"
   :initial '{"text": "󰝟 0%", "tooltip": "Cargando..."}'
-  "/home/jose/.config/eww/scripts/audio.sh")
+  "scripts/audio.sh")
 
 (defpoll backlight_json :interval "0.5s"
   :initial '{"text": "󰃠", "tooltip": "Brillo"}'
-  "/home/jose/.config/eww/scripts/backlight.sh")
+  "scripts/backlight.sh")
 
 (defpoll bluetooth_json :interval "2s"
   :initial '{"text": "󰂲", "tooltip": "Bluetooth"}'
-  "/home/jose/.config/eww/scripts/bluetooth.sh")
+  "scripts/bluetooth.sh")
 
-(defpoll battery_capacity :interval "30s" "cat /sys/class/power_supply/BAT0/capacity")
-(defpoll battery_status :interval "30s" "cat /sys/class/power_supply/BAT0/status")
+(defpoll battery_capacity :interval "30s" "cat /sys/class/power_supply/$(ls /sys/class/power_supply/ | grep -E '^BAT[0-9]+' | head -n1)/capacity")
+(defpoll battery_status :interval "30s" "cat /sys/class/power_supply/$(ls /sys/class/power_supply/ | grep -E '^BAT[0-9]+' | head -n1)/status")
 
 (defpoll updates_json :interval "1600s"
   :initial '{"text": "", "class": "updated"}'
@@ -154,14 +154,14 @@
 
 (defwidget quicksettings []
   (box :orientation "h" :space-evenly false
-    (eventbox :onclick "pavucontrol &" :onscroll "/home/jose/.config/eww/scripts/volume_scroll.sh {}"
+    (eventbox :onclick "pavucontrol &" :onscroll "scripts/volume_scroll.sh {}"
       (box :class "module audio" {audio_json.text}))
     (eventbox :onclick "foot -e nmtui &"
       (box :class "module network ${network_json.class}" {network_json.text}))
     (eventbox :onclick "blueman-manager &"
       (box :class "module bluetooth" {bluetooth_json.text}))
     (box :class "module battery" {battery_status == "Charging" ? "󱐋" : ""} " ${battery_capacity}%")
-    (eventbox :onscroll "/home/jose/.config/eww/scripts/backlight_scroll.sh {}"
+    (eventbox :onscroll "scripts/backlight_scroll.sh {}"
       (box :class "module backlight" {backlight_json.text}))))
 
 (defwidget power_menu []
