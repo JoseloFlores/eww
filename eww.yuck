@@ -1,3 +1,76 @@
+;; --- VARIABLES ---
+(defpoll cpu_usage :interval "1s" "/home/jose/.config/eww/scripts/cpu_fast.sh")
+(defpoll ram_usage :interval "2s" "free -m | awk '/Mem:/ { print int($3/$2 * 100) }'")
+(defpoll disk_usage :interval "10m" "/home/jose/.config/eww/scripts/disk.sh")
+(defpoll temp_cpu :interval "2s" "cat /sys/class/thermal/thermal_zone7/temp | cut -c1-2")
+
+(defpoll weather_json :interval "30m" "/home/jose/.config/eww/scripts/weather.sh")
+(defpoll net_info :interval "10s" "/home/jose/.config/eww/scripts/network_info.sh")
+
+(defpoll time_hour :interval "1m" "date '+%H'")
+(defpoll time_min :interval "1m" "date '+%M'")
+(defpoll day_name :interval "1h" "date '+%A' | tr '[:lower:]' '[:upper:]'")
+(defpoll day_date :interval "1h" "date '+%d / %b / %Y' | tr '[:lower:]' '[:upper:]'")
+
+(defpoll net_speed :interval "1s" "/home/jose/.config/eww/scripts/network_fast.sh")
+
+(defvar power_reveal false)
+
+;; --- WINDOW DASHBOARD ---
+(defwindow solar-dashboard
+  :monitor 0
+  :stacking "bg"
+  :focusable false
+  :geometry (geometry :x "10px" :y "100px" :width "450px" :anchor "top right")
+  (box :class "conky-main-container" :orientation "h" :space-evenly false :spacing 30
+    
+    ;; COLUMNA IZQUIERDA
+    (box :class "conky-left-col" :orientation "v" :space-evenly false :halign "center" :valign "center"
+      (label :text time_hour :class "conky-time-big")
+      (label :text time_min :class "conky-time-big")
+      (box :class "conky-date-box" :orientation "v" :space-evenly false :spacing 2 :style "margin-top: 15px;"
+        (label :text day_name :class "conky-day-name")
+        (label :text day_date :class "conky-day-date")))
+
+    ;; COLUMNA DERECHA
+    (box :class "conky-right-col" :orientation "v" :space-evenly false :spacing 15
+      
+      ;; Panel 1: Sistema (ANILLOS APILADOS VERTICALMENTE)
+      (box :class "conky-panel" :orientation "h" :space-evenly false :spacing 15
+        (box :orientation "v" :spacing 10 ;; Cambiado a vertical
+          (box :class "ring-container"
+            (circular-progress :value cpu_usage :thickness 5 :start-at 75 :class "ring-cpu"
+              (label :text "󰻠" :class "ring-icon")))
+          (box :class "ring-container"
+            (circular-progress :value disk_usage :thickness 5 :start-at 75 :class "ring-disk"
+              (label :text "󰋊" :class "ring-icon"))))
+        (box :orientation "v" :space-evenly true :halign "start" :valign "center"
+          (label :text "System : ${cpu_usage}%" :class "conky-stat-text" :halign "start")
+          (label :text "Home : ${disk_usage}%" :class "conky-stat-text" :halign "start")))
+
+      ;; Panel 2: Clima
+      (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 5
+        (label :text {weather_json.location} :class "conky-loc-text" :halign "start")
+        (box :orientation "h" :space-evenly false :spacing 15
+          (label :text {weather_json.temp} :class "conky-temp-text")
+          (box :orientation "v" :space-evenly false :valign "center"
+            (label :text "${weather_json.icon} ${weather_json.condition}" :class "conky-cond-text" :halign "start")
+            (label :text "Hum: ${weather_json.humid}" :class "conky-vis-text" :halign "start"))))
+
+      ;; Panel 3: Red
+      (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 8
+        (label :text "Wi-Fi : ${net_info.ssid}" :class "conky-wifi-ssid" :halign "start")
+        (box :orientation "v" :space-evenly false :spacing 5
+          (box :orientation "v" :space-evenly false :spacing 2
+            (label :text "${net_speed.down}b/s >> DOWNLOAD" :class "conky-net-label" :halign "start")
+            (graph :class "conky-net-graph" :value {net_speed.down_raw} :thickness 2 :time-range "30s" :dynamic true :min 0 :max 1000 :color "#f87171"))
+          (box :orientation "v" :space-evenly false :spacing 2
+            (label :text "${net_speed.up}b/s >> UPLOAD" :class "conky-net-label" :halign "start")
+            (graph :class "conky-net-graph" :value {net_speed.up_raw} :thickness 2 :time-range "30s" :dynamic true :min 0 :max 500 :color "#5b85f9"))))
+    )
+  ))
+
+;; --- BARRA ORIGINAL ---
 (defwindow eww-bar
   :monitor 0
   :windowtype "dock"
@@ -5,11 +78,7 @@
   :exclusive true
   :focusable false
   :namespace "eww-bar"
-  :geometry (geometry :x "0px"
-                       :y "0px"
-                       :width "100%"
-                       :height "25px"
-                       :anchor "top center")
+  :geometry (geometry :x "0px" :y "0px" :width "100%" :height "25px" :anchor "top center")
   (bar_layout))
 
 (defwidget bar_layout []
@@ -21,145 +90,87 @@
 
 (defwidget left_modules []
   (box :orientation "h" :space-evenly false :halign "start"
-    (workspaces)
-    ))
+    (workspaces)))
 
 (defwidget center_modules []
   (box :orientation "h" :space-evenly false :halign "center"
-    (clock_module)
-    ))
+    (clock_module)))
 
 (defwidget right_modules []
   (box :orientation "h" :space-evenly false :halign "end"
     (updates)
     (quicksettings)
-    (power_menu)
-    ))
-
-;; --- VARIABLES ---
+    (power_menu)))
 
 (deflisten workspaces_json :initial "[]" "/home/jose/.config/eww/scripts/workspaces.sh")
 
-(defpoll time :interval "1s"
-  "date '+ %H:%M   %d/%m'")
+(defpoll time :interval "1s" "date '+ %H:%M   %d/%m'")
+(defpoll full_date :interval "1h" "date '+%A, %d de %B de %Y'")
 
-(defpoll full_date :interval "1h"
-  "date '+%A, %d de %B de %Y'")
-
-(defpoll music_info :interval "2s"
-  "/home/jose/.config/eww/scripts/music.sh")
-
-(defpoll network_json :interval "3s"
+(defpoll network_json :interval "1s"
   :initial '{"text": "󰤭", "tooltip": "Conectando...", "class": "disconnected"}'
   "/home/jose/.config/hypr/waybar_network.sh")
 
-(defpoll audio_json :interval "2s"
+(defpoll audio_json :interval "0.5s"
   :initial '{"text": "󰝟 0%", "tooltip": "Cargando..."}'
   "/home/jose/.config/eww/scripts/audio.sh")
 
-(defpoll backlight_json :interval "2s"
+(defpoll backlight_json :interval "0.5s"
   :initial '{"text": "󰃠", "tooltip": "Brillo"}'
   "/home/jose/.config/eww/scripts/backlight.sh")
 
-(defpoll bluetooth_json :interval "5s"
+(defpoll bluetooth_json :interval "2s"
   :initial '{"text": "󰂲", "tooltip": "Bluetooth"}'
   "/home/jose/.config/eww/scripts/bluetooth.sh")
 
-(defpoll battery_capacity :interval "30s"
-  "cat /sys/class/power_supply/BAT0/capacity")
-
-(defpoll battery_status :interval "30s"
-  "cat /sys/class/power_supply/BAT0/status")
+(defpoll battery_capacity :interval "30s" "cat /sys/class/power_supply/BAT0/capacity")
+(defpoll battery_status :interval "30s" "cat /sys/class/power_supply/BAT0/status")
 
 (defpoll updates_json :interval "1600s"
   :initial '{"text": "", "class": "updated"}'
   "/home/jose/.config/hypr/check_updates.sh")
 
-(defvar power_reveal false)
-
-;; --- WIDGETS ---
-
 (defwidget workspaces []
   (box :class "module" :spacing 2
     (for ws in workspaces_json
-      (eventbox :cursor "pointer"
-                :onclick "hyprctl dispatch workspace ${ws.id}"
-                :tooltip "Workspace ${ws.id}"
+      (eventbox :cursor "pointer" :onclick "hyprctl dispatch workspace ${ws.id}"
         (box :class "workspaces-button ${ws.status}"
           (label :text {ws.status == "active" ? "󰮯" : ""} :class "ws-icon"))))))
 
 (defwidget clock_module []
   (eventbox :onclick "/home/jose/eww/target/release/eww open --toggle calendar_win" 
             :cursor "pointer"
-            :tooltip full_date
-    (box :class "module clock"
-      time)))
+    (box :class "module clock" time)))
 
 (defwindow calendar_win
   :monitor 0
-  :geometry (geometry :x "0px" 
-                       :y "30px" 
-                       :anchor "top center")
-  (box :class "calendar-container"
-    (calendar)))
+  :geometry (geometry :x "0px" :y "5px" :anchor "top center")
+  (box :class "calendar-container" (calendar)))
 
 (defwidget updates []
   (box :visible {updates_json.text != ""}
-    (eventbox :cursor "pointer" 
-              :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y; echo \"Sistema actualizado. Presiona cualquier tecla para cerrar...\"; read -n 1' &"
-              :tooltip "Actualizaciones pendientes"
+    (eventbox :cursor "pointer" :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y' &"
       (box :class "module updates" {updates_json.text}))))
 
 (defwidget quicksettings []
   (box :orientation "h" :space-evenly false
-    (eventbox :cursor "pointer" 
-              :onscroll "~/.config/eww/scripts/volume.sh {}"
-              :onclick "pavucontrol &"
-              :tooltip {audio_json.tooltip}
+    (eventbox :onclick "pavucontrol &" :onscroll "/home/jose/.config/eww/scripts/volume_scroll.sh {}"
       (box :class "module audio" {audio_json.text}))
-
-    (eventbox :cursor "pointer" :onclick "foot nmtui &"
-              :tooltip {network_json.tooltip}
-      (box :class "module network ${network_json.class}" 
-           {network_json.text}))
-
-    (eventbox :cursor "pointer" :onclick "blueman-manager &"
-              :tooltip {bluetooth_json.tooltip}
+    (eventbox :onclick "foot -e nmtui &"
+      (box :class "module network ${network_json.class}" {network_json.text}))
+    (eventbox :onclick "blueman-manager &"
       (box :class "module bluetooth" {bluetooth_json.text}))
-
-    (box :class "module battery" 
-         :tooltip "Estado: ${battery_status} - ${battery_capacity}%"
-         {battery_status == "Charging" ? "󱐋" : ""}
-         " ${battery_capacity}%")
-
-    (eventbox :cursor "pointer"
-              :onscroll "if [ {} = up ]; then brightnessctl set 5%+; else brightnessctl set 5%-; fi && /home/jose/eww/target/release/eww update backlight_json=\"$(/home/jose/.config/eww/scripts/backlight.sh)\""
-              :tooltip {backlight_json.tooltip}
-      (box :class "module backlight" {backlight_json.text}))
-    ))
+    (box :class "module battery" {battery_status == "Charging" ? "󱐋" : ""} " ${battery_capacity}%")
+    (eventbox :onscroll "/home/jose/.config/eww/scripts/backlight_scroll.sh {}"
+      (box :class "module backlight" {backlight_json.text}))))
 
 (defwidget power_menu []
   (eventbox :onhover "/home/jose/eww/target/release/eww update power_reveal=true" 
             :onhoverlost "/home/jose/eww/target/release/eww update power_reveal=false"
     (box :orientation "h" :space-evenly false :class "module"
-      (eventbox :cursor "pointer" 
-                :onclick "/home/jose/.config/hypr/confirm_power.sh '¿Apagar?' 'shutdown now'" 
-                :tooltip "Apagar"
-        (label :text "⏻" :class "power-icon"))
-      (revealer :transition "slideright"
-                :reveal power_reveal
-                :duration "500ms"
-        (box :spacing 15 :style "margin-left: 10px; margin-right: 5px;"
-          (eventbox :cursor "pointer" 
-                    :onclick "hyprlock & sleep 2 && hyprctl dispatch dpms off"
-                    :tooltip "Bloquear"
-            (label :text "󰌾" :class "lock-icon"))
-          (eventbox :cursor "pointer" 
-                    :onclick "/home/jose/.config/hypr/confirm_power.sh '¿Suspender?' 'systemctl suspend'" 
-                    :tooltip "Suspender"
-            (label :text "󰤄" :class "suspend-icon"))
-          (eventbox :cursor "pointer" 
-                    :onclick "/home/jose/.config/hypr/confirm_power.sh '¿Reiniciar?' 'reboot'" 
-                    :tooltip "Reiniciar"
-            (label :text "󰜉" :class "reboot-icon"))
-          )))))
+      (label :text "⏻" :class "power-icon")
+      (revealer :transition "slideright" :reveal power_reveal :duration "500ms"
+        (box :spacing 15 :style "margin-left: 10px;"
+          (eventbox :onclick "zenity --question --text='¿Suspender?' && systemctl suspend &" (label :text "󰤄" :class "suspend-icon"))
+          (eventbox :onclick "zenity --question --text='¿Bloquear?' && loginctl lock-session &" (label :text "󰌾" :class "lock-icon"))
+          (eventbox :onclick "zenity --question --text='¿Reiniciar?' && systemctl reboot &" (label :text "󰜉" :class "reboot-icon")))))))

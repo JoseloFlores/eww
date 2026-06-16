@@ -1,49 +1,103 @@
 @import "themes/nebula";
 
-// REGLA MAESTRA PARA DEBIAN: Forzar canal Alfa
-window {
-  background-color: transparent;
-  all: unset;
+/* Reset selectivo */
+window { background-color: transparent; }
+* { font-family: "MesloLGM Nerd Font Mono"; }
+
+.conky-main-container { 
+  padding: 20px; 
+  background-color: rgba($bg, 0.01);
 }
 
-// Reset global
-* {
-  all: unset;
-  background-color: transparent;
-  font-family: "MesloLGM Nerd Font Mono", "Symbols Nerd Font Mono", "CaskaydiaCove Nerd Font Propo";
-  font-size: 11px; 
+/* COLUMNA IZQUIERDA */
+.conky-time-big {
+  font-size: 100px;
+  font-weight: 900;
+  color: $fg;
+  margin: -15px 0;
+}
+
+.conky-day-name {
+  font-size: 18px;
   font-weight: bold;
+  color: $purple;
+  letter-spacing: 2px;
 }
 
-// La barra visual (la "isla" flotante)
+.conky-day-date {
+  font-size: 14px;
+  color: rgba($fg, 0.6);
+}
+
+/* COLUMNA DERECHA */
+.conky-panel {
+  background-color: rgba($bg-alt, 0.7);
+  border: 1px solid rgba($fg, 0.1);
+  border-radius: 15px;
+  padding: 10px;
+  min-width: 200px;
+  min-height: 120px;
+}
+
+/* ANILLOS (APILADOS VERTICALMENTE) */
+.ring-container {
+  background-color: rgba($fg, 0.05);
+  border-radius: 50%;
+  min-width: 50px;
+  min-height: 50px;
+}
+
+circular-progress {
+  min-width: 50px;
+  min-height: 50px;
+}
+
+.ring-cpu { color: $blue; }
+.ring-disk { color: $green; }
+.ring-icon { font-size: 16px; color: $fg; }
+
+.conky-stat-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: $fg;
+}
+
+/* CLIMA */
+.conky-loc-text { font-size: 13px; color: rgba($fg, 0.5); font-weight: bold; }
+.conky-temp-text { font-size: 36px; font-weight: 900; color: $cyan; }
+.conky-cond-text { font-size: 14px; color: $fg; }
+.conky-vis-text { font-size: 12px; color: rgba($fg, 0.5); }
+
+/* RED */
+.conky-wifi-ssid { font-size: 13px; font-weight: bold; color: $purple; }
+.conky-net-label { font-size: 11px; color: rgba($fg, 0.7); font-weight: bold; }
+
+/* Nuevo estilo para los graficos */
+.conky-net-graph {
+  min-height: 40px;
+}
+
+/* BARRA ORIGINAL */
 .bar-container {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 12px; 
-  margin: 0px; 
-  padding: 0px 6px;
+  padding: 0px 10px;
   min-height: 25px;
 }
 
-// Estilo base para cada módulo
 .module {
-  background-color: rgba($bg-alt, 0.7); 
-  padding: 0px 6px; 
+  background-color: rgba($bg-alt, 0.5); 
+  padding: 0px 8px; 
   margin: 2px 4px; 
   border-radius: 4px;
-  transition: background-color 0.2s ease-in-out;
 }
-
-.module:hover {
-  background-color: rgba($fg, 0.15);
-}
-
-// Workspaces
 .workspaces-button {
   padding: 0px 4px;
   margin: 0px 2px;
-  min-width: 8px;
-  background-color: rgba($bg-alt, 0.3);
+  min-width: 10px;
+  background-color: rgba($bg-alt, 0.1);
   border-radius: 4px;
+  border: none;
   color: $fg;
 }
 
@@ -52,52 +106,25 @@ window {
   color: $purple;
 }
 
-.ws-icon {
-  font-family: "Symbols Nerd Font", "Symbols Nerd Font Mono";
-  font-size: 10px;
-}
-
-// Colores de módulos específicos
-.clock { font-weight: bold; }
+.ws-icon { font-size: 12px; }
+.clock { font-weight: bold; color: $fg; }
 .network { color: $blue; }
-.network.disconnected { color: $fg; }
 .audio { color: $purple; }
 .backlight { color: $yellow; }
 .battery { color: $green; }
 .bluetooth { color: $blue; }
+.power-icon { color: $red; }
+.lock-icon { color: $cyan; }
+.suspend-icon { color: $yellow; }
+.reboot-icon { color: $green; }
 
-// Menú de energía
-.power-icon { color: $red; font-size: 11px; }
-.lock-icon { color: $cyan; font-size: 11px; }
-.suspend-icon { color: $yellow; font-size: 11px; }
-.reboot-icon { color: $green; font-size: 11px; }
-
-.power-icon, .lock-icon, .suspend-icon, .reboot-icon {
-  padding: 0 2px;
-}
-
-// Calendario
 .calendar-container {
   background-color: $bg;
-  color: $fg;
   border-radius: 12px;
   padding: 10px;
-  border: 1px solid rgba($blue, 0.15);
+  border: none;
 }
 
 calendar {
-  background-color: transparent;
-  color: $fg;
-}
-
-// Tooltips
-tooltip {
-  background-color: $bg-alt;
-  border-radius: 8px;
-  border: 1px solid rgba($blue, 0.3);
-}
-
-tooltip label {
-  padding: 4px 8px;
-  color: $fg;
+  border: none;
 }
