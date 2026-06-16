@@ -1,4 +1,4 @@
-@import "themes/tokyonight";
+@import "themes/nebula";
 
 /* Reset selectivo */
 window { background-color: transparent; }
@@ -79,14 +79,14 @@ circular-progress {
 
 /* BARRA ORIGINAL */
 .bar-container {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.0);
   border-radius: 12px; 
   padding: 0px 10px;
   min-height: 25px;
 }
 
 .module {
-  background-color: rgba($bg-alt, 0.5); 
+  background-color: rgba($bg-alt, 0.6); 
   padding: 0px 8px; 
   margin: 2px 4px; 
   border-radius: 4px;
@@ -102,7 +102,7 @@ circular-progress {
 }
 
 .workspaces-button.active {
-  background-color: rgba($fg, 0.2);
+/*  background-color: rgba($fg, 0.2);*/
   color: $purple;
 }
 
