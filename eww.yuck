@@ -111,11 +111,11 @@
   :initial '{"text": "󰤭", "tooltip": "Conectando...", "class": "disconnected"}'
   "/home/jose/.config/hypr/waybar_network.sh")
 
-(defpoll audio_json :interval "0.5s"
+(defpoll audio_json :interval "0.1s"
   :initial '{"text": "󰝟 0%", "tooltip": "Cargando..."}'
   "scripts/audio.sh")
 
-(defpoll backlight_json :interval "0.5s"
+(defpoll backlight_json :interval "0.1s"
   :initial '{"text": "󰃠", "tooltip": "Brillo"}'
   "scripts/backlight.sh")
 
@@ -133,13 +133,14 @@
 (defwidget workspaces []
   (box :class "module" :spacing 2
     (for ws in workspaces_json
-      (eventbox :cursor "pointer" :onclick "hyprctl dispatch workspace ${ws.id}"
+      (eventbox :cursor "pointer" :onclick "hyprctl dispatch workspace ${ws.id}" :tooltip "Workspace ${ws.id}"
         (box :class "workspaces-button ${ws.status}"
           (label :text {ws.status == "active" ? "󰮯" : ""} :class "ws-icon"))))))
 
 (defwidget clock_module []
   (eventbox :onclick "/home/jose/eww/target/release/eww open --toggle calendar_win" 
             :cursor "pointer"
+            :tooltip full_date
     (box :class "module clock" time)))
 
 (defwindow calendar_win
@@ -149,28 +150,29 @@
 
 (defwidget updates []
   (box :visible {updates_json.text != ""}
-    (eventbox :cursor "pointer" :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y' &"
+    (eventbox :cursor "pointer" :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y' &" :tooltip "Actualizaciones pendientes"
       (box :class "module updates" {updates_json.text}))))
 
 (defwidget quicksettings []
   (box :orientation "h" :space-evenly false
-    (eventbox :onclick "pavucontrol &" :onscroll "scripts/volume_scroll.sh {}"
+    (eventbox :onclick "pavucontrol &" :onscroll "scripts/volume_scroll.sh {}" :tooltip {audio_json.tooltip}
       (box :class "module audio" {audio_json.text}))
-    (eventbox :onclick "foot -e nmtui &"
+    (eventbox :onclick "foot -e nmtui &" :tooltip {network_json.tooltip}
       (box :class "module network ${network_json.class}" {network_json.text}))
-    (eventbox :onclick "blueman-manager &"
+    (eventbox :onclick "blueman-manager &" :tooltip {bluetooth_json.tooltip}
       (box :class "module bluetooth" {bluetooth_json.text}))
-    (box :class "module battery" {battery_status == "Charging" ? "󱐋" : ""} " ${battery_capacity}%")
-    (eventbox :onscroll "scripts/backlight_scroll.sh {}"
+    (box :class "module battery" :tooltip "Batería: ${battery_capacity}% (${battery_status})" {battery_status == "Charging" ? "󱐋" : ""} " ${battery_capacity}%")
+    (eventbox :onscroll "scripts/backlight_scroll.sh {}" :tooltip {backlight_json.tooltip}
       (box :class "module backlight" {backlight_json.text}))))
 
 (defwidget power_menu []
   (eventbox :onhover "/home/jose/eww/target/release/eww update power_reveal=true" 
             :onhoverlost "/home/jose/eww/target/release/eww update power_reveal=false"
     (box :orientation "h" :space-evenly false :class "module"
-      (label :text "⏻" :class "power-icon")
+      (eventbox :onclick "zenity --question --text='¿Apagar?' && systemctl poweroff &" :cursor "pointer" :tooltip "Apagar"
+        (label :text "⏻" :class "power-icon"))
       (revealer :transition "slideright" :reveal power_reveal :duration "500ms"
         (box :spacing 15 :style "margin-left: 10px;"
-          (eventbox :onclick "zenity --question --text='¿Suspender?' && systemctl suspend &" (label :text "󰤄" :class "suspend-icon"))
-          (eventbox :onclick "zenity --question --text='¿Bloquear?' && loginctl lock-session &" (label :text "󰌾" :class "lock-icon"))
-          (eventbox :onclick "zenity --question --text='¿Reiniciar?' && systemctl reboot &" (label :text "󰜉" :class "reboot-icon")))))))
+          (eventbox :onclick "zenity --question --text='¿Suspender?' && systemctl suspend &" :tooltip "Suspender" (label :text "󰤄" :class "suspend-icon"))
+          (eventbox :onclick "zenity --question --text='¿Bloquear?' && loginctl lock-session &" :tooltip "Bloquear" (label :text "󰌾" :class "lock-icon"))
+          (eventbox :onclick "zenity --question --text='¿Reiniciar?' && systemctl reboot &" :tooltip "Reiniciar" (label :text "󰜉" :class "reboot-icon")))))))
