@@ -35,37 +35,41 @@
     ;; COLUMNA DERECHA
     (box :class "conky-right-col" :orientation "v" :space-evenly false :spacing 15
       
-      ;; Panel 1: Sistema (ANILLOS APILADOS VERTICALMENTE)
-      (box :class "conky-panel" :orientation "h" :space-evenly false :spacing 15
-        (box :orientation "v" :spacing 10 ;; Cambiado a vertical
-          (box :class "ring-container"
+      ;; Panel 1: Sistema (ANILLOS HORIZONTALES)
+      (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 15
+        (box :orientation "h" :space-evenly true
+          (box :class "ring-container" :halign "center"
             (circular-progress :value cpu_usage :thickness 5 :start-at 75 :class "ring-cpu"
               (label :text "󰻠" :class "ring-icon")))
-          (box :class "ring-container"
+          (box :class "ring-container" :halign "center"
+            (circular-progress :value ram_usage :thickness 5 :start-at 75 :class "ring-ram"
+              (label :text "󰍛" :class "ring-icon")))
+          (box :class "ring-container" :halign "center"
             (circular-progress :value disk_usage :thickness 5 :start-at 75 :class "ring-disk"
               (label :text "󰋊" :class "ring-icon"))))
-        (box :orientation "v" :space-evenly true :halign "start" :valign "center"
-          (label :text "System : ${cpu_usage}%" :class "conky-stat-text" :halign "start")
-          (label :text "Home : ${disk_usage}%" :class "conky-stat-text" :halign "start")))
+        (box :orientation "h" :space-evenly true
+          (label :text "CPU: ${cpu_usage}%" :class "conky-stat-text")
+          (label :text "RAM: ${ram_usage}%" :class "conky-stat-text")
+          (label :text "Disk: ${disk_usage}%" :class "conky-stat-text")))
 
       ;; Panel 2: Clima
       (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 5
-        (label :text {weather_json.location} :class "conky-loc-text" :halign "start")
+        (label :text {weather_json.location} :class "conky-loc-text" :halign "center")
         (box :orientation "v" :space-evenly false :spacing 15
-          (label :text {weather_json.temp} :class "conky-temp-text")
+          (label :text {weather_json.temp} :class "conky-temp-text" :halign "center")
           (box :orientation "v" :space-evenly false :valign "center"
-            (label :text "${weather_json.icon} ${weather_json.condition}" :class "conky-cond-text" :halign "start")
-            (label :text "Hum: ${weather_json.humid}" :class "conky-vis-text" :halign "start"))))
+            (label :text "${weather_json.icon} ${weather_json.condition}" :class "conky-cond-text" :halign "center")
+            (label :text "Hum: ${weather_json.humid}" :class "conky-vis-text" :halign "center"))))
 
       ;; Panel 3: Red
-      (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 9
-        (label :text "Wi-Fi : ${net_info.ssid}" :class "conky-wifi-ssid" :halign "start")
-        (box :orientation "v" :space-evenly false :spacing 5
+      (box :class "conky-panel" :orientation "v" :space-evenly false :spacing 12 :valign "center"
+        (label :text "${net_info.type} : ${net_info.name}" :class "conky-wifi-ssid" :halign "center")
+        (box :orientation "v" :space-evenly false :spacing 12
           (box :orientation "v" :space-evenly false :spacing 2
-            (label :text "${net_speed.down}b/s >> DOWNLOAD" :class "conky-net-label" :halign "start")
+            (label :text "${net_speed.down}b/s >> DOWNLOAD" :class "conky-net-label" :halign "center")
             (graph :class "conky-net-graph" :value {net_speed.down_raw} :thickness 2 :time-range "30s" :dynamic true :min 0 :max 1000 :color "#f87171"))
           (box :orientation "v" :space-evenly false :spacing 2
-            (label :text "${net_speed.up}b/s >> UPLOAD" :class "conky-net-label" :halign "start")
+            (label :text "${net_speed.up}b/s >> UPLOAD" :class "conky-net-label" :halign "center")
             (graph :class "conky-net-graph" :value {net_speed.up_raw} :thickness 2 :time-range "30s" :dynamic true :min 0 :max 500 :color "#5b85f9"))))
     )
   ))
