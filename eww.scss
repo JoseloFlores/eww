@@ -35,8 +35,8 @@ window { background-color: transparent; }
   border: 1px solid rgba($fg, 0.1);
   border-radius: 15px;
   padding: 10px;
-  min-width: 220px;
-  min-height: 120px;
+  min-width: 210px;
+  min-height: 140px;
 }
 
 /* ANILLOS (APILADOS VERTICALMENTE) */
@@ -74,8 +74,14 @@ circular-progress {
 .conky-net-label { font-size: 11px; color: rgba($fg, 0.7); font-weight: bold; }
 
 /* Nuevo estilo para los graficos */
-.conky-net-graph {
-  min-height: 40px;
+.conky-net-graph-down {
+  min-height: 42px;
+  color: #f87171;
+}
+
+.conky-net-graph-up {
+  min-height: 42px;
+  color: #5b85f9;
 }
 
 /* BARRA ORIGINAL */
