@@ -126,12 +126,12 @@ circular-progress {
 .reboot-icon { color: $green; }
 
 .calendar-container {
-  background-color: $bg;
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 10px;
+  padding: 0px;
   border: none;
 }
 
 calendar {
-  border: none;
+  border-radius: 10px;
+  background-color: rgba($bg-alt, 0.9);
 }
