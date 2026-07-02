@@ -1,4 +1,4 @@
-# Guía de Referencia: Barra Eww (Recreación de Waybar)
+# Guía de Referencia: Barra Eww (Recreación de Eww)
 
 ## Comandos Útiles
 - **Reiniciar la barra:** `~/.config/hypr/eww_restart.sh`
@@ -25,6 +25,6 @@ Si deseas cambiar los iconos de los workspaces, edita `eww.yuck` en la sección 
 - Vacío: ``
 
 ## Notas Técnicas
-- **Red:** Reutiliza el script original `~/.config/hypr/waybar_network.sh`.
+- **Red:** Reutiliza el script original `~/.config/hypr/eww_network.sh`.
 - **Batería:** Lee directamente de `/sys/class/power_supply/BAT0/`.
 - **Temperatura:** Lee de `/sys/class/thermal/thermal_zone0/`.

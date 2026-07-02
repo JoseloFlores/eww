@@ -1,8 +1,8 @@
-# Contexto de Trabajo: Recreación de Waybar en Eww
+# Contexto de Trabajo: Recreación de Eww en Eww
 
 ## Ubicaciones Clave
-- Waybar Config: `/home/jose/.config/hypr/waybar/config`
-- Waybar Style: `/home/jose/.config/hypr/waybar/style.css`
+- Eww Config: `/home/jose/.config/hypr/eww/config`
+- Eww Style: `/home/jose/.config/hypr/eww/style.css`
 - Eww Config: `/home/jose/.config/eww/`
 - Scripts de Apoyo: `/home/jose/.config/hypr/*.sh`
 

@@ -116,7 +116,7 @@
 
 (defpoll network_json :interval "1s"
   :initial '{"text": "󰤭", "tooltip": "Conectando...", "class": "disconnected"}'
-  "/home/jose/.config/hypr/waybar_network.sh")
+  "/home/jose/.config/hypr/eww_network.sh")
 
 (defpoll audio_json :interval "0.1s"
   :initial '{"text": "󰝟 0%", "tooltip": "Cargando..."}'
