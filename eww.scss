@@ -55,7 +55,7 @@ circular-progress {
 .ring-cpu { color: $blue; }
 .ring-ram { color: $yellow; }
 .ring-disk { color: $green; }
-.ring-icon { font-size: 16px; color: $fg; }
+.ring-icon { font-size: 22px; color: $fg; }
 
 .conky-stat-text {
   font-size: 11px;
@@ -94,8 +94,8 @@ circular-progress {
 
 .module {
   background-color: rgba($bg-alt, 0.6); 
-  padding: 0px 8px; 
-  margin: 2px 4px; 
+  padding: 0px 5px; 
+  margin: 2px 2px; 
   border-radius: 4px;
 }
 .workspaces-button {
@@ -113,7 +113,7 @@ circular-progress {
   color: $purple;
 }
 
-.ws-icon { font-size: 10px; }
+.ws-icon { font-size: 11px; }
 .clock { font-weight: bold; color: $fg; }
 .network { color: $blue; }
 .audio { color: $purple; }
