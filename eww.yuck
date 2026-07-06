@@ -133,7 +133,7 @@
 (defpoll battery_capacity :interval "30s" "cat /sys/class/power_supply/$(ls /sys/class/power_supply/ | grep -E '^BAT[0-9]+' | head -n1)/capacity")
 (defpoll battery_status :interval "30s" "cat /sys/class/power_supply/$(ls /sys/class/power_supply/ | grep -E '^BAT[0-9]+' | head -n1)/status")
 
-(defpoll updates_json :interval "1600s"
+(defpoll updates_json :interval "3600s"
   :initial '{"text": "", "class": "updated"}'
   "/home/jose/.config/hypr/check_updates.sh")
 
@@ -157,7 +157,7 @@
 
 (defwidget updates []
   (box :visible {updates_json.text != ""}
-    (eventbox :cursor "pointer" :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y' &" :tooltip "Actualizaciones pendientes"
+    (eventbox :cursor "pointer" :onclick "foot sh -c 'sudo apt update && sudo apt upgrade -y && /home/jose/eww/target/release/eww update updates_json=\"\$(/home/jose/.config/hypr/check_updates.sh)\"' &" :tooltip "Actualizaciones pendientes"
       (box :class "module updates" {updates_json.text}))))
 
 (defwidget quicksettings []
