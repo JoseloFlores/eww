@@ -8,7 +8,7 @@ else
 fi
 
 # 2. Obtener el nuevo valor formateado
-NEW_INFO=$(/home/jose/.config/eww/scripts/audio.sh)
+NEW_INFO=$(/home/jo/.config/eww/scripts/audio.sh)
 
 # 3. Forzar actualización inmediata en Eww
-/home/jose/eww/target/release/eww update audio_json="$NEW_INFO"
+/usr/local/bin/eww update audio_json="$NEW_INFO"

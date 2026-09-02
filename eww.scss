@@ -124,6 +124,7 @@ circular-progress {
 .lock-icon { color: $cyan; }
 .suspend-icon { color: $yellow; }
 .reboot-icon { color: $green; }
+.logout-icon { color: $purple; }
 
 .calendar-container {
   border-radius: 10px;
@@ -134,4 +135,58 @@ circular-progress {
 calendar {
   border-radius: 10px;
   background-color: rgba($bg-alt, 0.9);
+}
+
+/* POWER MENU WINDOW */
+.power-menu-bg {
+  background-color: rgba($bg-alt, 0.95);
+  border-radius: 10px;
+  border: 1px solid rgba($fg, 0.1);
+  padding: 8px;
+  min-width: 160px;
+}
+
+.power-btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 2px 4px;
+  color: $fg;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 150ms;
+  min-width: 140px;
+}
+
+.power-btn:hover {
+  background-color: rgba($fg, 0.1);
+  color: $purple;
+}
+
+.power-btn.cancel {
+  color: $red;
+  border-top: 1px solid rgba($fg, 0.1);
+  margin-top: 4px;
+  padding-top: 10px;
+}
+
+.power-btn.cancel:hover {
+  background-color: rgba($red, 0.15);
+  color: $red;
+}
+
+.power-icon {
+  font-size: 16px;
+}
+
+/* Items dentro del revealer del power menu */
+.power-menu-item {
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 150ms;
+}
+
+.power-menu-item:hover {
+  background-color: rgba($fg, 0.15);
 }
